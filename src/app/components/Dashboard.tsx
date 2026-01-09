@@ -61,43 +61,44 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const webhookUrl = `${backendUrl}/api/bridge/${user.id}`;
 
   useEffect(() => {
-    // Load config from localStorage (mock)
-    const savedConfig = localStorage.getItem(`config_${user.id}`);
-    if (savedConfig) {
-      setConfig(JSON.parse(savedConfig));
-    }
+    const fetchData = async () => {
+      try {
+        // 1. Fetch Config
+        const configRes = await fetch(`${backendUrl}/api/config/${user.id}`);
+        if (configRes.ok) {
+          const configData = await configRes.json();
+          setConfig({
+            robloxApiKey: configData.roblox_api_key || "",
+            placeId: configData.place_id || "",
+            sociabuzzToken: configData.sociabuzz_token || "",
+          });
+        }
 
-    // Load mock webhook logs
-    const mockLogs: WebhookLog[] = [
-      {
-        id: "1",
-        timestamp: new Date(Date.now() - 3600000).toISOString(),
-        supporter: "Ahmad Hidayat",
-        amount: 50000,
-        message: "Semangat terus bang!",
-        status: "success",
-      },
-      {
-        id: "2",
-        timestamp: new Date(Date.now() - 7200000).toISOString(),
-        supporter: "Budi Santoso",
-        amount: 100000,
-        message: "Keren gamenya!",
-        status: "success",
-      },
-      {
-        id: "3",
-        timestamp: new Date(Date.now() - 10800000).toISOString(),
-        supporter: "Siti Nurhaliza",
-        amount: 25000,
-        message: "",
-        status: "success",
-      },
-    ];
-    setWebhookLogs(mockLogs);
+        // 2. Fetch Logs
+        const logsRes = await fetch(`${backendUrl}/api/logs/${user.id}`);
+        if (logsRes.ok) {
+          const logsData = await logsRes.json();
+          if (logsData.success && Array.isArray(logsData.logs)) {
+            setWebhookLogs(logsData.logs.map((log: any) => ({
+              id: log.id,
+              timestamp: log.created_at,
+              supporter: log.supporter,
+              amount: log.amount,
+              message: log.message,
+              status: log.status,
+            })));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+        toast.error("Gagal memuat data dashboard");
+      }
+    };
+
+    fetchData();
   }, [user.id]);
 
-  const handleSaveConfig = (e: React.FormEvent) => {
+  const handleSaveConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!config.robloxApiKey || !config.placeId || !config.sociabuzzToken) {
@@ -105,12 +106,25 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       return;
     }
 
-    // Save to localStorage (mock)
-    localStorage.setItem(`config_${user.id}`, JSON.stringify(config));
-    setSaved(true);
-    toast.success("Konfigurasi berhasil disimpan!");
-    
-    setTimeout(() => setSaved(false), 3000);
+    try {
+      const response = await fetch(`${backendUrl}/api/config/${user.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          robloxApiKey: config.robloxApiKey,
+          placeId: config.placeId,
+          sociabuzzToken: config.sociabuzzToken,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Gagal menyimpan konfigurasi");
+
+      setSaved(true);
+      toast.success("Konfigurasi berhasil disimpan!");
+      setTimeout(() => setSaved(false), 3000);
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat menyimpan");
+    }
   };
 
   const copyToClipboard = (text: string) => {

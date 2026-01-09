@@ -17,36 +17,14 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("landing");
   const [user, setUser] = useState<User | null>(null);
 
-  const handleLogin = (email: string, password: string) => {
-    // Mock login
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const foundUser = users.find(
-      (u: any) => u.email === email && u.password === password
-    );
-
-    if (foundUser) {
-      setUser({
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-      });
-      setCurrentPage("dashboard");
-    }
+  const handleLogin = (user: { id: string | number; name: string; email: string }) => {
+    setUser({ ...user, id: String(user.id) });
+    setCurrentPage("dashboard");
   };
 
-  const handleRegister = (email: string, password: string, name: string) => {
-    // Mock register - user already created in RegisterPage
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const foundUser = users.find((u: any) => u.email === email);
-
-    if (foundUser) {
-      setUser({
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-      });
-      setCurrentPage("dashboard");
-    }
+  const handleRegister = (user: { id: string | number; name: string; email: string }) => {
+    setUser({ ...user, id: String(user.id) });
+    setCurrentPage("dashboard");
   };
 
   const handleLogout = () => {

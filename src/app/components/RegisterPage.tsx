@@ -6,8 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Webhook, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "./ui/alert";
 
+interface APIUser {
+  id: string | number;
+  name: string;
+  email: string;
+}
+
 interface RegisterPageProps {
-  onRegister: (email: string, password: string, name: string) => void;
+  onRegister: (user: APIUser) => void;
   onBackToHome: () => void;
   onLogin: () => void;
 }
@@ -20,49 +26,48 @@ export function RegisterPage({ onRegister, onBackToHome, onLogin }: RegisterPage
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
-    
+  
+    // Validasi Input
     if (!name || !email || !password || !confirmPassword) {
       setError("Semua field harus diisi");
       return;
     }
-
     if (password !== confirmPassword) {
-      setError("Password dan konfirmasi password tidak cocok");
+      setError("Password tidak cocok");
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password minimal 6 karakter");
-      return;
-    }
+    try {
+      
+      const response = await fetch("https://eugen-roblox-brigde-production.up.railway.app/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        }),
+      });
 
-    // Mock registration
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    
-    if (users.find((u: any) => u.email === email)) {
-      setError("Email sudah terdaftar");
-      return;
-    }
+      const data = await response.json();
 
-    const newUser = {
-      id: Date.now().toString(),
-      name,
-      email,
-      password,
-      createdAt: new Date().toISOString(),
-    };
+      if (!response.ok) {
+        throw new Error(data.error || "Gagal mendaftar");
+      }
 
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    
-    setSuccess(true);
-    setTimeout(() => {
-      onRegister(email, password, name);
-    }, 1500);
+    // 2. Jika berhasil
+      setSuccess(true);
+      setTimeout(() => {
+        onRegister(data.user);
+      }, 1500);
+
+    } catch (err: any) {
+      setError(err.message);
+    } 
   };
 
   return (

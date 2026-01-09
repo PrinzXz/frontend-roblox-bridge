@@ -6,8 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Webhook, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "./ui/alert";
 
+interface APIUser {
+  id: string | number;
+  name: string;
+  email: string;
+}
+
 interface LoginPageProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (user: APIUser) => void;
   onBackToHome: () => void;
   onRegister: () => void;
 }
@@ -17,7 +23,7 @@ export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps)
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
@@ -26,16 +32,23 @@ export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps)
       return;
     }
 
-    // Mock validation
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find((u: any) => u.email === email && u.password === password);
-    
-    if (!user) {
-      setError("Email atau password salah");
-      return;
-    }
+    try {
+      const response = await fetch("https://eugen-roblox-brigde-production.up.railway.app/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    onLogin(email, password);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Login gagal");
+      }
+
+      onLogin(data.user);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
