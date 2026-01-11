@@ -58,7 +58,7 @@ export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps)
           <div className="flex justify-center mb-4">
             <Webhook className="w-12 h-12 text-blue-600" />
           </div>
-          <CardTitle className="text-2xl">Masuk ke WebhookBridge</CardTitle>
+          <CardTitle className="text-2xl">Masuk ke Eugen Bridge</CardTitle>
           <CardDescription>
             Masukkan kredensial Anda untuk mengakses dashboard
           </CardDescription>
@@ -102,14 +102,7 @@ export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps)
 
             <div className="text-center space-y-2">
               <p className="text-sm text-gray-600">
-                Belum punya akun?{" "}
-                <button
-                  type="button"
-                  onClick={onRegister}
-                  className="text-blue-600 hover:underline"
-                >
-                  Daftar di sini
-                </button>
+                Belum punya akun? Hubungi admin untuk pembuatan akun.
               </p>
               <button
                 type="button"

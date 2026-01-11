@@ -4,24 +4,23 @@ import { CheckCircle2, Webhook, Shield, Zap, Code, Users } from "lucide-react";
 
 interface LandingPageProps {
   onLogin: () => void;
-  onRegister: () => void;
 }
 
-export function LandingPage({ onLogin, onRegister }: LandingPageProps) {
+export function LandingPage({ onLogin }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Webhook className="w-8 h-8 text-blue-600" />
-          <span className="text-2xl font-bold text-gray-900">WebhookBridge</span>
+          <div>
+            <span className="text-2xl font-bold text-gray-900">Eugen Bridge</span>
+            <p className="text-xs text-gray-600">SociaBuzz to Roblox Platform</p>
+          </div>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={onLogin}>
+          <Button onClick={onLogin}>
             Masuk
-          </Button>
-          <Button onClick={onRegister}>
-            Daftar Gratis
           </Button>
         </div>
       </header>
@@ -37,7 +36,7 @@ export function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             langsung ke game Roblox Anda secara real-time.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button size="lg" onClick={onRegister} className="px-8">
+            <Button size="lg" onClick={onLogin} className="px-8">
               Mulai Sekarang
             </Button>
             <Button size="lg" variant="outline" className="px-8">
@@ -125,9 +124,9 @@ export function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
               1
             </div>
-            <h3 className="font-bold text-lg mb-2">Daftar & Login</h3>
+            <h3 className="font-bold text-lg mb-2">Login</h3>
             <p className="text-gray-600">
-              Buat akun gratis dan masuk ke dashboard Anda
+              Masuk ke dashboard dengan akun yang dibuat oleh admin
             </p>
           </div>
           <div className="text-center">
@@ -158,15 +157,15 @@ export function LandingPage({ onLogin, onRegister }: LandingPageProps) {
             Siap Mulai Menerima Donasi?
           </h2>
           <p className="text-xl mb-8 text-blue-100">
-            Bergabung dengan ratusan developer Roblox yang sudah menggunakan WebhookBridge
+            Bergabung dengan ratusan developer Roblox yang sudah menggunakan Eugen Bridge
           </p>
           <Button 
             size="lg" 
             variant="secondary"
-            onClick={onRegister}
+            onClick={onLogin}
             className="px-8"
           >
-            Daftar Sekarang - Gratis!
+            Masuk ke Dashboard
           </Button>
         </div>
       </section>
@@ -174,7 +173,7 @@ export function LandingPage({ onLogin, onRegister }: LandingPageProps) {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 border-t border-gray-200">
         <div className="text-center text-gray-600">
-          <p>© 2026 WebhookBridge. Platform webhook multi-tenant untuk Roblox.</p>
+          <p>© 2026 Eugen Bridge. Platform webhook multi-tenant untuk Roblox.</p>
         </div>
       </footer>
     </div>
