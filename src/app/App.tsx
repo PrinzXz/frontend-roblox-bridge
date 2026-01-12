@@ -16,22 +16,27 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("landing");
   const [user, setUser] = useState<User | null>(null);
 
-  const handleLogin = (email: string, password: string) => {
-    // Mock login
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const foundUser = users.find(
-      (u: any) => u.email === email && u.password === password
-    );
-
-    if (foundUser) {
-      setUser({
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-      });
-      setCurrentPage("dashboard");
-    }
+const handleLogin = (userData: User) => {
+    setUser(userData);
+    setCurrentPage("dashboard");
   };
+
+  // const handleLogin = (email: string, password: string) => {
+  //   // Mock login
+  //   const users = JSON.parse(localStorage.getItem("users") || "[]");
+  //   const foundUser = users.find(
+  //     (u: any) => u.email === email && u.password === password
+  //   );
+
+  //   if (foundUser) {
+  //     setUser({
+  //       id: foundUser.id,
+  //       email: foundUser.email,
+  //       name: foundUser.name,
+  //     });
+  //     setCurrentPage("dashboard");
+  //   }
+  // };
 
   const handleLogout = () => {
     setUser(null);
