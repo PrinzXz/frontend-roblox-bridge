@@ -157,7 +157,7 @@ export function LandingPage({ onLogin }: LandingPageProps) {
             Siap Mulai Menerima Donasi?
           </h2>
           <p className="text-xl mb-8 text-blue-100">
-            Bergabung dengan ratusan developer Roblox yang sudah menggunakan Eugen Bridge
+            Bergabunglah dengan developer Roblox yang menggunakan Eugen Bridge
           </p>
           <Button 
             size="lg" 
